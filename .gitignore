@@ -1,0 +1,9 @@
+# IDE files
+.idea/
+*.iml
+
+# Maven target folder
+target/
+
+# Optional: local documentation
+# HELP.md
