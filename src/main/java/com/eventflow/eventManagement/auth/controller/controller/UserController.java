@@ -1,7 +1,9 @@
 package com.eventflow.eventManagement.auth.controller.controller;
 
 import com.eventflow.eventManagement.auth.repository.UserRepository;
+import com.eventflow.eventManagement.auth.service.UserService;
 import com.eventflow.eventManagement.common.dto.Incident;
+import com.eventflow.eventManagement.common.dto.RegisterRequest;
 import com.eventflow.eventManagement.common.dto.User;
 import com.eventflow.eventManagement.incident.service.IncidentService;
 import org.springframework.http.ResponseEntity;
@@ -14,21 +16,20 @@ import java.util.Optional;
 @RequestMapping("/api/user")
 public class UserController {
 
-    private final UserRepository repository;
+    private final UserService service;
 
-    public UserController(UserRepository repository) {
-        this.repository = repository;
+    public UserController(UserService service) {
+        this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<Integer> create(@RequestBody User user) {
-        int id = repository.save(user);
+    @PostMapping("/register")
+    public ResponseEntity<Long> register(@RequestBody RegisterRequest req) {
+        Long id = service.register(
+                req.getUsername(),
+                req.getEmail(),
+                req.getPassword(),
+                req.getRole()
+        );
         return ResponseEntity.ok(id);
-    }
-
-    @GetMapping
-    public ResponseEntity<Optional<User>> getUserByUsername(@RequestParam String username) {
-        Optional<User> user = repository.findByUsername(username);
-        return ResponseEntity.ok(user);
     }
 }

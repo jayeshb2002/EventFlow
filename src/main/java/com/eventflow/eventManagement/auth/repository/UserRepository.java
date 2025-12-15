@@ -1,6 +1,7 @@
 package com.eventflow.eventManagement.auth.repository;
 
 import com.eventflow.eventManagement.common.dto.User;
+import com.eventflow.eventManagement.common.mapper.UserRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,27 +20,26 @@ public class UserRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<User> userRowMapper = new RowMapper<>() {
-        @Override
-        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new User(
-                    rs.getLong("id"),
-                    rs.getString("username"),
-                    rs.getString("email"),
-                    rs.getString("password_hash"),
-                    rs.getString("role"),
-                    rs.getTimestamp("created_at").toLocalDateTime()
-            );
-        }
-    };
+    public Long save(User user) {
+        String sql = """
+            INSERT INTO users (username, email, password_hash, role)
+            VALUES (?, ?, ?, ?)
+            RETURNING id
+        """;
 
-    public Optional<User> findByUsername(String username) {
-        String sql = "SELECT * FROM eventflowdb.users WHERE username = ?";
-        return jdbcTemplate.query(sql, userRowMapper, username).stream().findFirst();
+        return jdbcTemplate.queryForObject(
+                sql,
+                Long.class,
+                user.getUsername(),
+                user.getEmail(),
+                user.getPasswordHash(),
+                user.getRole()
+        );
     }
 
-    public int save(User user) {
-        String sql = "INSERT INTO eventflowdb.users(username, email, password_hash, role, created_at) VALUES (?, ?, ?, ?, ?)";
-        return jdbcTemplate.update(sql, user.getUsername(), user.getEmail(), user.getPasswordHash(), user.getRole(), LocalDateTime.now());
+    public Optional<User> findByUsername(String username) {
+        String sql = "SELECT * FROM users WHERE username = ?";
+        return jdbcTemplate.query(sql, new UserRowMapper(), username)
+                .stream().findFirst();
     }
 }
