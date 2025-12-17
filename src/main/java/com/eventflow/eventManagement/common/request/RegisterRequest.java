@@ -1,4 +1,4 @@
-package com.eventflow.eventManagement.common.dto;
+package com.eventflow.eventManagement.common.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -46,4 +46,13 @@ public class IncidentRepository {
         return jdbcTemplate.query(sql, new IncidentRowMapper(), id)
                 .stream().findFirst();
     }
+
+    public void updateIncident(Long id, String status, String severity) {
+        String sql = """
+        UPDATE incidents
+        SET status = ?, severity = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+    """;
+        jdbcTemplate.update(sql, status, severity, id);
+    }
 }

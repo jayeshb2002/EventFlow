@@ -1,6 +1,7 @@
 package com.eventflow.eventManagement.incident.service;
 
 import com.eventflow.eventManagement.common.dto.Incident;
+import com.eventflow.eventManagement.common.request.UpdateIncidentRequest;
 import com.eventflow.eventManagement.incident.repository.IncidentRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,4 +24,9 @@ public class IncidentService {
     public List<Incident> getAllIncidents() {
         return repository.findAll();
     }
+
+    public void updateIncident(Long id, UpdateIncidentRequest req) {
+        repository.updateIncident(id, req.getStatus(), req.getSeverity());
+    }
+
 }

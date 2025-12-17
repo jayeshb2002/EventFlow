@@ -1,16 +1,9 @@
 package com.eventflow.eventManagement.auth.controller.controller;
 
-import com.eventflow.eventManagement.auth.repository.UserRepository;
 import com.eventflow.eventManagement.auth.service.UserService;
-import com.eventflow.eventManagement.common.dto.Incident;
-import com.eventflow.eventManagement.common.dto.RegisterRequest;
-import com.eventflow.eventManagement.common.dto.User;
-import com.eventflow.eventManagement.incident.service.IncidentService;
+import com.eventflow.eventManagement.common.request.RegisterRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")

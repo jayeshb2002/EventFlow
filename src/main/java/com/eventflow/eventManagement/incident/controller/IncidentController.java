@@ -1,6 +1,7 @@
 package com.eventflow.eventManagement.incident.controller;
 
 import com.eventflow.eventManagement.common.dto.Incident;
+import com.eventflow.eventManagement.common.request.UpdateIncidentRequest;
 import com.eventflow.eventManagement.incident.service.IncidentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,5 +27,13 @@ public class IncidentController {
     @GetMapping
     public List<Incident> getAll() {
         return service.getAllIncidents();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(
+            @PathVariable Long id,
+            @RequestBody UpdateIncidentRequest req) {
+        service.updateIncident(id, req);
+        return ResponseEntity.ok().build();
     }
 }
