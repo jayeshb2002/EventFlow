@@ -80,3 +80,16 @@ CREATE TABLE daily_incident_stats (
     date DATE PRIMARY KEY,
     total BIGINT
 );
+
+CREATE TABLE incident_audit_logs (
+  id BIGSERIAL PRIMARY KEY,
+  incident_id BIGINT,
+  action VARCHAR(50),
+  old_value VARCHAR(100),
+  new_value VARCHAR(100),
+  changed_by VARCHAR(50),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_audit_incident_id
+ON incident_audit_logs(incident_id);

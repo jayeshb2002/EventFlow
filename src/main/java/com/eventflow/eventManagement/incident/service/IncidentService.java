@@ -2,13 +2,17 @@ package com.eventflow.eventManagement.incident.service;
 
 import com.eventflow.eventManagement.common.dto.Incident;
 import com.eventflow.eventManagement.common.dto.IncidentEvent;
+import com.eventflow.eventManagement.common.dto.IncidentUpdatedEvent;
 import com.eventflow.eventManagement.common.request.UpdateIncidentRequest;
 import com.eventflow.eventManagement.incident.repository.IncidentRepository;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -51,9 +55,25 @@ public class IncidentService {
         return repository.findAll();
     }
 
+    @Transactional
     public void updateIncident(Long id, UpdateIncidentRequest req) {
+
+        Incident existing = repository.findByIdForUpdation(id);
+
         repository.updateIncident(id, req.getStatus(), req.getSeverity());
+
+        IncidentUpdatedEvent event = new IncidentUpdatedEvent();
+        event.setIncidentId(id);
+        event.setField("STATUS");
+        event.setOldValue(existing.getStatus());
+        event.setNewValue(req.getStatus());
+        event.setUpdatedBy(SecurityContextHolder.getContext()
+                .getAuthentication().getName());
+        event.setTimestamp(LocalDateTime.now());
+
+        eventProducer.sendIncidentUpdatedEvent(event);
     }
+
 
     public Incident getIncidentById(Long id) {
         String key = "incident:" + id;

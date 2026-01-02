@@ -55,4 +55,12 @@ public class IncidentRepository {
     """;
         jdbcTemplate.update(sql, status, severity, id);
     }
+
+    public Incident findByIdForUpdation(Long id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT * FROM incidents WHERE id=?",
+                new IncidentRowMapper(),
+                id
+        );
+    }
 }
