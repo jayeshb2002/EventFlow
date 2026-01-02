@@ -60,3 +60,23 @@ CREATE TABLE eventflowdb.audit_logs (
 );
 
 CREATE INDEX idx_audit_event_type ON eventflowdb.audit_logs(event_type);
+
+CREATE TABLE processed_events (
+    event_id UUID PRIMARY KEY,
+    processed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE incident_severity_stats (
+    severity VARCHAR(20) PRIMARY KEY,
+    count BIGINT
+);
+
+CREATE TABLE incident_type_stats (
+    type VARCHAR(30) PRIMARY KEY,
+    count BIGINT
+);
+
+CREATE TABLE daily_incident_stats (
+    date DATE PRIMARY KEY,
+    total BIGINT
+);
